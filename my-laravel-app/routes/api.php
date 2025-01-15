@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HelloController;
 
 /*
@@ -19,4 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/hello', [HelloController::class, 'index']);
+// Public routes
+Route::post('/login', [AuthController::class, 'login']);
+
+// Protected routes
+Route::middleware('jwt')->group(function () {
+    Route::get('/auth', [AuthController::class, 'checkAuth']);
+    Route::get('/hello', [HelloController::class, 'index']);
+});
